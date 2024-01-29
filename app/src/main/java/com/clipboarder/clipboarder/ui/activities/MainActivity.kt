@@ -1,4 +1,4 @@
-package com.clipboarder.clipboarder.ui
+package com.clipboarder.clipboarder.ui.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

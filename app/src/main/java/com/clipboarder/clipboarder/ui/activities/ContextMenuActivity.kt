@@ -1,4 +1,4 @@
-package com.clipboarder.clipboarder.ui
+package com.clipboarder.clipboarder.ui.activities
 
 import android.content.Intent
 import android.net.Uri
