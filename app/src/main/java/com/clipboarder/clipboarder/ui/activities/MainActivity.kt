@@ -3,43 +3,41 @@ package com.clipboarder.clipboarder.ui.activities
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.clipboarder.clipboarder.ui.theme.ClipboarderTheme
+import androidx.navigation.compose.rememberNavController
+import com.clipboarder.clipboarder.ui.navigation.AppNavigation
 
+/**
+ * MainActivity
+ *
+ * This Activity is the first to be called when the application starts.
+ * It sets up the UI using Jetpack Compose and uses the AppScreen Composable function as the root view.
+ *
+ * @author YoungJin Sohn
+ * @since v1.0.0
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ClipboarderTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
+            AppScreen()
         }
     }
 }
 
+/**
+ * AppScreen
+ *
+ * This Composable function creates the navigation controller and manages screen transitions
+ * through AppNavigation. All screens are displayed according to the navigation rules
+ * defined within this Composable.
+ *
+ * @author YoungJin Sohn
+ * @since v1.0.0
+ * @see AppNavigation
+ */
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ClipboarderTheme {
-        Greeting("Android")
-    }
+fun AppScreen() {
+    val navController = rememberNavController()
+    AppNavigation(navController)
 }
