@@ -10,5 +10,5 @@ import androidx.lifecycle.ViewModel
  * @since 1.0.0
  * @author YoungJin Sohn
  */
-class OnBoardingScreenViewModel : ViewModel() {
+class OnboardingScreenViewModel : ViewModel() {
 }
