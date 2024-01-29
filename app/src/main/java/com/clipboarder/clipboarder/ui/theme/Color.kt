@@ -1,4 +1,4 @@
-package com.clipboarder.clipboarder.presentation.theme
+package com.clipboarder.clipboarder.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

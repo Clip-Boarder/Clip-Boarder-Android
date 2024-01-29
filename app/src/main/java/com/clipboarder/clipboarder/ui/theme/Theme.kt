@@ -1,4 +1,4 @@
-package com.clipboarder.clipboarder.presentation.theme
+package com.clipboarder.clipboarder.ui.theme
 
 import android.app.Activity
 import android.os.Build
