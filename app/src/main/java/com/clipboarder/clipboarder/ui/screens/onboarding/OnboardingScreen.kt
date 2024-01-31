@@ -15,9 +15,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -89,7 +91,11 @@ fun OnboardingScreen(navController: NavController) {
                     ),
                     modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
                 ) {
-                    Text(context.getString(R.string.onboarding_previous_page))
+                    Text(
+                        context.getString(R.string.onboarding_previous_page),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
 
@@ -109,7 +115,11 @@ fun OnboardingScreen(navController: NavController) {
                     ),
                     modifier = Modifier.padding(end = 8.dp, bottom = 8.dp)
                 ) {
-                    Text(context.getString(R.string.onboarding_done))
+                    Text(
+                        context.getString(R.string.onboarding_done),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             } else {
                 Button(
@@ -120,7 +130,11 @@ fun OnboardingScreen(navController: NavController) {
                     ),
                     modifier = Modifier.padding(end = 8.dp, bottom = 8.dp)
                 ) {
-                    Text(context.getString(R.string.onboarding_next_page))
+                    Text(
+                        context.getString(R.string.onboarding_next_page),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
         }
