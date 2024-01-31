@@ -28,7 +28,7 @@
         </service>
 
         <activity
-            android:name=".ui.KeyboardSettingActivity"
+            android:name=".ui.activities.KeyboardSettingActivity"
             android:exported="true"
             android:label="Clipboarder 키보드 설정">
             <intent-filter>
@@ -37,7 +37,7 @@
         </activity>
 
         <activity
-            android:name=".ui.ContextMenuActivity"
+            android:name=".ui.activities.ContextMenuActivity"
             android:exported="true"
             android:label="클립보더 업로드"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
@@ -80,7 +80,7 @@
         </activity>
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Clipboarder">
             <intent-filter>
