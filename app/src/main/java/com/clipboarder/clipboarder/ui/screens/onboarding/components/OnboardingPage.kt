@@ -19,6 +19,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.clipboarder.clipboarder.R
 
+/**
+ * Onboarding page.
+ *
+ * A page of the onboarding screen.
+ *
+ * @param title The title of the page.
+ * @param description The description of the page.
+ * @param imageResourceId The resource ID of the image to be displayed on the page.
+ * @param modifier The modifier to be applied to the page.
+ * @since 1.0.0
+ * @author YoungJin Sohn
+ */
 @Composable
 fun OnboardingPage(title: String, description: String, imageResourceId: Int, modifier: Modifier) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
