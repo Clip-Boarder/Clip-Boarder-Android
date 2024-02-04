@@ -1,4 +1,8 @@
 package com.clipboarder.clipboarder.data.repository
 
-class UserRepository {
+import com.clipboarder.clipboarder.data.remote.api.ApiService
+import javax.inject.Inject
+
+class UserRepository @Inject constructor(private val apiService: ApiService) {
+
 }
