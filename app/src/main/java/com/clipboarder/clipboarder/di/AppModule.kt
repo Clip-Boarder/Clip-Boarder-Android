@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import com.clipboarder.clipboarder.BuildConfig
 
 /**
  * AppModule
@@ -25,7 +26,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit =
-        Retrofit.Builder().baseUrl("").addConverterFactory(GsonConverterFactory.create()).build()
+        Retrofit.Builder().baseUrl(BuildConfig.clipboarderBaseUrl).addConverterFactory(GsonConverterFactory.create()).build()
 
     @Provides
     @Singleton

@@ -30,8 +30,8 @@ android {
             localProperties.load(localPropertiesFile.inputStream())
         }
 
-        localProperties["CLIPBOARDER_SERVER_URL"]?.let {value ->
-            buildConfigField("String", "CLIPBOARDER_SERVER_URL", "\"$value\"")
+        localProperties["clipboarderBaseUrl"]?.let {value ->
+            buildConfigField("String", "clipboarderBaseUrl", "\"$value\"")
         }
     }
 
@@ -53,6 +53,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.2"
