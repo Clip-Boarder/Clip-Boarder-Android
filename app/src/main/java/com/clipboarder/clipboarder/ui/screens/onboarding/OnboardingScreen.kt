@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -46,7 +47,7 @@ const val ONBOARDING_SCREEN = "onboarding_screen"
 @Composable
 fun OnboardingScreen(navController: NavController) {
     val context: Context = LocalContext.current
-    val viewModel: OnboardingScreenViewModel = viewModel()
+    val viewModel: OnboardingScreenViewModel = hiltViewModel()
     val currentPage = viewModel.currentPage.observeAsState()
 
     Column(

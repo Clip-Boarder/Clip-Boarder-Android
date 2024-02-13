@@ -1,9 +1,9 @@
 package com.clipboarder.clipboarder.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.clipboarder.clipboarder.ui.screens.login.LOGIN_SCREEN
 import com.clipboarder.clipboarder.ui.screens.login.LoginScreen
 import com.clipboarder.clipboarder.ui.screens.main.MAIN_SCREEN
@@ -16,7 +16,8 @@ import com.clipboarder.clipboarder.ui.screens.storage.STORAGE_SCREEN
 import com.clipboarder.clipboarder.ui.screens.storage.StorageScreen
 
 @Composable
-fun AppNavigation(navController: NavHostController) {
+fun AppNavigation() {
+    val navController = rememberNavController()
     NavHost(navController = navController, startDestination = ONBOARDING_SCREEN) {
         composable(ONBOARDING_SCREEN) { OnboardingScreen(navController = navController) }
         composable(LOGIN_SCREEN) { LoginScreen(navController = navController) }

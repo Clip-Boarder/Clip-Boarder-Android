@@ -1,6 +1,10 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("dagger.hilt.android.plugin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -18,6 +22,17 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // Get security values from local.properties
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+
+        localProperties["clipboarderBaseUrl"]?.let {value ->
+            buildConfigField("String", "clipboarderBaseUrl", "\"$value\"")
+        }
     }
 
     buildTypes {
@@ -30,17 +45,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
@@ -67,6 +83,11 @@ dependencies {
     // Additional dependencies
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")             // Retrofit
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")       // Retrofit Converter
+    implementation("com.google.dagger:hilt-android:2.50")               // Dagger-Hilt
+    ksp("com.google.dagger:hilt-android-compiler:2.50")                 // Hilt Compiler
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")       // Hilt Navigation
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

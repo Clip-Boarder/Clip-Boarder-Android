@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.clipboarder.clipboarder.R
 import com.clipboarder.clipboarder.ui.navigation.AppNavigation
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * MainActivity
@@ -23,6 +24,7 @@ import com.clipboarder.clipboarder.ui.navigation.AppNavigation
  * @author YoungJin Sohn
  * @since v1.0.0
  */
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,6 @@ class MainActivity : ComponentActivity() {
  */
 @Composable
 fun AppScreen() {
-    val navController = rememberNavController()
     val fontFamily = FontFamily(
         Font(R.font.pretendard_thin, FontWeight.Thin),
         Font(R.font.pretendard_extralight, FontWeight.ExtraLight),
@@ -67,6 +68,6 @@ fun AppScreen() {
             )
         )
     ) {
-        AppNavigation(navController)
+        AppNavigation()
     }
 }

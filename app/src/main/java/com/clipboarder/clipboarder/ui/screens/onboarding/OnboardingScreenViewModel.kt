@@ -3,6 +3,8 @@ package com.clipboarder.clipboarder.ui.screens.onboarding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 /**
  * Onboarding screen view model.
@@ -12,13 +14,13 @@ import androidx.lifecycle.ViewModel
  * @since 1.0.0
  * @author YoungJin Sohn
  */
-class OnboardingScreenViewModel : ViewModel() {
+@HiltViewModel
+class OnboardingScreenViewModel @Inject constructor() : ViewModel() {
     /**
      * Current page of the onboarding screen.
      */
     private val _currentPage = MutableLiveData<Int>(0)
     val currentPage: LiveData<Int> = _currentPage
-
 
     /**
      * Navigates to the previous page.
