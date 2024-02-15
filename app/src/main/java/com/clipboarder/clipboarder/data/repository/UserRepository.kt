@@ -2,10 +2,8 @@ package com.clipboarder.clipboarder.data.repository
 
 import com.clipboarder.clipboarder.data.remote.api.ApiService
 import com.clipboarder.clipboarder.data.remote.dto.ApiResponseDto
-import com.clipboarder.clipboarder.data.remote.dto.SignInRequestDto
-import com.clipboarder.clipboarder.data.remote.dto.SignInResponseDto
-import com.clipboarder.clipboarder.data.remote.dto.SignUpRequestDto
-import com.clipboarder.clipboarder.data.remote.dto.SignUpResponseDto
+import com.clipboarder.clipboarder.data.remote.dto.SignInDto
+import com.clipboarder.clipboarder.data.remote.dto.SignUpDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -38,8 +36,8 @@ class UserRepository @Inject constructor(private val apiService: ApiService) {
         name: String,
         picture: String?,
         provider: String
-    ): Flow<ApiResponseDto<SignUpResponseDto>> = flow {
-        val signUpRequestDto = SignUpRequestDto(email, password, name, picture, provider)
+    ): Flow<ApiResponseDto<SignUpDto.SignUpResponseDto>> = flow {
+        val signUpRequestDto = SignUpDto.SignUpRequestDto(email, password, name, picture, provider)
         val response = apiService.signUp(signUpRequestDto)
         if (response.isSuccessful && response.body() != null) {
             emit(response.body()!!)
@@ -47,7 +45,7 @@ class UserRepository @Inject constructor(private val apiService: ApiService) {
             throw Exception("Sign Up Failed: ${response.message()}")
         }
     }.catch { e ->
-        emit(ApiResponseDto(false, null as SignUpResponseDto?))
+        emit(ApiResponseDto(false, null as SignUpDto.SignUpResponseDto?))
         throw e
     }
 
@@ -60,16 +58,17 @@ class UserRepository @Inject constructor(private val apiService: ApiService) {
      * @param password The password of the user.
      * @return The response of the sign in.
      */
-    fun signIn(email: String, password: String): Flow<ApiResponseDto<SignInResponseDto>> = flow {
-        val signInRequestDto = SignInRequestDto(email, password)
-        val response = apiService.signIn(signInRequestDto)
-        if (response.isSuccessful && response.body() != null) {
-            emit(response.body()!!)
-        } else {
-            throw Exception("Sign In Failed: ${response.message()}")
+    fun signIn(email: String, password: String): Flow<ApiResponseDto<SignInDto.SignInResponseDto>> =
+        flow {
+            val signInRequestDto = SignInDto.SignInRequestDto(email, password)
+            val response = apiService.signIn(signInRequestDto)
+            if (response.isSuccessful && response.body() != null) {
+                emit(response.body()!!)
+            } else {
+                throw Exception("Sign In Failed: ${response.message()}")
+            }
+        }.catch { e ->
+            emit(ApiResponseDto(false, null as SignInDto.SignInResponseDto?))
+            throw e
         }
-    }.catch { e ->
-        emit(ApiResponseDto(false, null as SignInResponseDto?))
-        throw e
-    }
 }
