@@ -88,6 +88,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.50")               // Dagger-Hilt
     ksp("com.google.dagger:hilt-android-compiler:2.50")                 // Hilt Compiler
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")       // Hilt Navigation
+    implementation("com.google.android.gms:play-services-auth:21.0.0")  // Google Sign-In
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
