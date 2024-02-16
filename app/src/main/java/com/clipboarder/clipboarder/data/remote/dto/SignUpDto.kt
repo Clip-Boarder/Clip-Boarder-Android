@@ -53,9 +53,6 @@ class SignUpDto {
      * @author YoungJin Sohn
      */
     data class SignUpResponseDto(
-        @SerializedName("result")
-        val result: Boolean?,
-
         @SerializedName("access_token")
         val accessToken: String?
     )

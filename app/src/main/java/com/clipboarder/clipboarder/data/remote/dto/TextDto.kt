@@ -67,9 +67,6 @@ class TextDto {
      * @author YoungJin Sohn
      */
     data class DownloadTextListResponseDto(
-        @SerializedName("result")
-        val result: Boolean?,
-
         @SerializedName("texts")
         val textList: List<TextDto>?
     )
