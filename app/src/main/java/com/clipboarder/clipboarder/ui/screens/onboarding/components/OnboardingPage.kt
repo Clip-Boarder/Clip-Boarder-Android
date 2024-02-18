@@ -43,14 +43,14 @@ fun OnboardingPage(title: String, description: String, imageResourceId: Int, mod
             Spacer(modifier = Modifier.height(32.dp))
             Text(
                 text = title,
-                fontSize = 24.sp,
+                fontSize = 27.sp,
                 fontWeight = FontWeight.SemiBold,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = description,
                 textAlign = TextAlign.Center,
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
                 softWrap = true,
                 modifier = Modifier.padding(horizontal = 48.dp)
