@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -96,7 +97,8 @@ fun OnboardingScreen(
                     Text(
                         context.getString(R.string.onboarding_previous_page),
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = (-0.025).em,
                     )
                 }
             }
@@ -120,7 +122,8 @@ fun OnboardingScreen(
                     Text(
                         context.getString(R.string.onboarding_done),
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = (-0.025).em,
                     )
                 }
             } else {
@@ -135,7 +138,8 @@ fun OnboardingScreen(
                     Text(
                         context.getString(R.string.onboarding_next_page),
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = (-0.025).em,
                     )
                 }
             }

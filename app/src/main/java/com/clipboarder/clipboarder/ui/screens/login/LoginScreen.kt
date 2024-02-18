@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -198,14 +197,15 @@ fun BrandingSection(modifier: Modifier = Modifier) {
         )
         Text(
             fontWeight = FontWeight.Medium,
-            fontSize = 18.sp,
+            fontSize = 24.sp,
+            letterSpacing = (-0.025).em,
             text = buildAnnotatedString {
-                withStyle(style = SpanStyle(fontSize = 36.sp, letterSpacing = (-0.1).em)) {
-                    append("더 ")
+                withStyle(style = SpanStyle(fontSize = 48.sp)) {
+                    append("더")
                 }
                 append("빠르게, ")
-                withStyle(style = SpanStyle(fontSize = 36.sp, letterSpacing = (-0.1).em)) {
-                    append("더 ")
+                withStyle(style = SpanStyle(fontSize = 48.sp)) {
+                    append("더")
                 }
                 append("편리하게")
             },
@@ -218,17 +218,17 @@ fun BrandingSection(modifier: Modifier = Modifier) {
 fun ActionSection(onGoogleSignInRequested: () -> Unit) {
     Text(
         "지금 바로 시작해보세요",
-        fontSize = 15.sp,
+        fontSize = 20.sp,
         fontWeight = FontWeight.Medium,
         letterSpacing = (-0.025).em
     )
-    Spacer(modifier = Modifier.padding(12.dp))
     Divider(
         color = Color(0xFF5E5E5E),
         thickness = 1.dp,
-        modifier = Modifier.fillMaxWidth(1.0f),
+        modifier = Modifier
+            .fillMaxWidth(1.0f)
+            .padding(vertical = 24.dp),
     )
-    Spacer(modifier = Modifier.padding(12.dp))
     Button(
         modifier = Modifier
             .fillMaxWidth()
@@ -248,15 +248,15 @@ fun ActionSection(onGoogleSignInRequested: () -> Unit) {
                 painter = painterResource(id = com.google.android.gms.auth.api.R.drawable.googleg_standard_color_18),
                 contentDescription = "구글 아이콘",
                 modifier = Modifier
-                    .size(24.dp)
-                    .padding(end = 8.dp),
+                    .size(32.dp)
+                    .padding(end = 16.dp),
                 tint = Color.Unspecified
             )
             Text(
                 "구글 계정으로 시작하기",
                 color = Color(0xff767676),
                 fontWeight = FontWeight.Medium,
-                fontSize = 15.sp,
+                fontSize = 20.sp,
                 letterSpacing = 0.em
             )
         }
