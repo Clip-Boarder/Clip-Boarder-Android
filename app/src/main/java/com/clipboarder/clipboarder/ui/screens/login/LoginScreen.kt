@@ -218,7 +218,7 @@ fun BrandingSection(modifier: Modifier = Modifier) {
 fun ActionSection(onGoogleSignInRequested: () -> Unit) {
     Text(
         "지금 바로 시작해보세요",
-        fontSize = 20.sp,
+        fontSize = 18.sp,
         fontWeight = FontWeight.Medium,
         letterSpacing = (-0.025).em
     )
@@ -248,7 +248,7 @@ fun ActionSection(onGoogleSignInRequested: () -> Unit) {
                 painter = painterResource(id = R.drawable.google_logo),
                 contentDescription = "구글 아이콘",
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(32.dp)
                     .padding(end = 16.dp),
                 tint = Color.Unspecified
             )
@@ -256,7 +256,7 @@ fun ActionSection(onGoogleSignInRequested: () -> Unit) {
                 "구글 계정으로 시작하기",
                 color = Color(0xff767676),
                 fontWeight = FontWeight.Medium,
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 letterSpacing = 0.em
             )
         }
