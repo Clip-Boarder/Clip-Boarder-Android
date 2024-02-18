@@ -203,11 +203,11 @@ fun BrandingSection(modifier: Modifier = Modifier) {
                 withStyle(style = SpanStyle(fontSize = 48.sp)) {
                     append("더")
                 }
-                append("빠르게, ")
+                append(" 빠르게, ")
                 withStyle(style = SpanStyle(fontSize = 48.sp)) {
                     append("더")
                 }
-                append("편리하게")
+                append(" 편리하게")
             },
             modifier = Modifier.padding(start = 8.dp)
         )
@@ -241,14 +241,14 @@ fun ActionSection(onGoogleSignInRequested: () -> Unit) {
         ),
     ) {
         Row(
-            modifier = Modifier.padding(4.dp),
+            modifier = Modifier.padding(horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(id = com.google.android.gms.auth.api.R.drawable.googleg_standard_color_18),
+                painter = painterResource(id = R.drawable.google_logo),
                 contentDescription = "구글 아이콘",
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(40.dp)
                     .padding(end = 16.dp),
                 tint = Color.Unspecified
             )
