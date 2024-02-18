@@ -41,12 +41,8 @@ class LoginScreenViewModel @Inject constructor(private val userRepository: UserR
         _isLoginSuccess.value = null
         viewModelScope.launch {
             try {
-                userRepository.signUp(
-                    account.email!!,
-                    "testpw",
-                    account.displayName!!,
-                    account.photoUrl.toString(),
-                    "google"
+                userRepository.signIn(
+                    googleIdToken = account.idToken!!
                 ).collect { responseDto ->
                     if (responseDto.result!! == true) {
                         // userRepository.saveToken(responseDto.data?.accessToken)

@@ -3,7 +3,6 @@ package com.clipboarder.clipboarder.data.remote.api
 import com.clipboarder.clipboarder.data.remote.dto.ApiResponseDto
 import com.clipboarder.clipboarder.data.remote.dto.ImageDto
 import com.clipboarder.clipboarder.data.remote.dto.SignInDto
-import com.clipboarder.clipboarder.data.remote.dto.SignUpDto
 import com.clipboarder.clipboarder.data.remote.dto.TextDto
 import com.clipboarder.clipboarder.data.remote.dto.TextDto.UploadTextResponseDto
 import retrofit2.Response
@@ -21,9 +20,6 @@ import retrofit2.http.Query
  * @author YoungJin Sohn
  */
 interface ApiService {
-    @POST("/user")
-    suspend fun signUp(@Body signUpRequestDto: SignUpDto.SignUpRequestDto): Response<ApiResponseDto<SignUpDto.SignUpResponseDto>>
-
     @POST("/login")
     suspend fun signIn(@Body loginRequest: SignInDto.SignInRequestDto): Response<ApiResponseDto<SignInDto.SignInResponseDto>>
 

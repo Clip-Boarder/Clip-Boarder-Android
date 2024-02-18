@@ -3,7 +3,6 @@ package com.clipboarder.clipboarder.data.repository
 import com.clipboarder.clipboarder.data.remote.api.ApiService
 import com.clipboarder.clipboarder.data.remote.dto.ApiResponseDto
 import com.clipboarder.clipboarder.data.remote.dto.SignInDto
-import com.clipboarder.clipboarder.data.remote.dto.SignUpDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -19,37 +18,6 @@ import javax.inject.Inject
  */
 class UserRepository @Inject constructor(private val apiService: ApiService) {
     /**
-     * signUp
-     *
-     * This function signs up the user.
-     *
-     * @param email The email of the user.
-     * @param password The password of the user.
-     * @param name The name of the user.
-     * @param picture The picture of the user.
-     * @param provider The provider of the user.
-     * @return The response of the sign up.
-     */
-    fun signUp(
-        email: String,
-        password: String,
-        name: String,
-        picture: String?,
-        provider: String
-    ): Flow<ApiResponseDto<SignUpDto.SignUpResponseDto>> = flow {
-        val signUpRequestDto = SignUpDto.SignUpRequestDto(email, password, name, picture, provider)
-        val response = apiService.signUp(signUpRequestDto)
-        if (response.isSuccessful && response.body() != null) {
-            emit(response.body()!!)
-        } else {
-            throw Exception("Sign Up Failed: ${response.message()}")
-        }
-    }.catch { e ->
-        emit(ApiResponseDto(false, null as SignUpDto.SignUpResponseDto?))
-        throw e
-    }
-
-    /**
      * signIn
      *
      * This function signs in the user.
@@ -58,9 +26,9 @@ class UserRepository @Inject constructor(private val apiService: ApiService) {
      * @param password The password of the user.
      * @return The response of the sign in.
      */
-    fun signIn(email: String, password: String): Flow<ApiResponseDto<SignInDto.SignInResponseDto>> =
+    fun signIn(googleIdToken: String): Flow<ApiResponseDto<SignInDto.SignInResponseDto>> =
         flow {
-            val signInRequestDto = SignInDto.SignInRequestDto(email, password)
+            val signInRequestDto = SignInDto.SignInRequestDto(googleIdToken)
             val response = apiService.signIn(signInRequestDto)
             if (response.isSuccessful && response.body() != null) {
                 emit(response.body()!!)
