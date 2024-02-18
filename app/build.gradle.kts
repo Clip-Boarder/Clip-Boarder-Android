@@ -11,6 +11,13 @@ android {
     namespace = "com.clipboarder.clipboarder"
     compileSdk = 34
 
+    // Get security values from local.properties
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.inputStream())
+    }
+
     defaultConfig {
         applicationId = "com.clipboarder.clipboarder"
         minSdk = 24
@@ -23,20 +30,26 @@ android {
             useSupportLibrary = true
         }
 
-        // Get security values from local.properties
-        val localProperties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            localProperties.load(localPropertiesFile.inputStream())
-        }
-
         localProperties["clipboarderBaseUrl"]?.let {value ->
             buildConfigField("String", "clipboarderBaseUrl", "\"$value\"")
+        }
+        localProperties["clipboarderServerClientId"]?.let { value ->
+            buildConfigField("String", "clipboarderServerClientId", "\"$value\"")
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = localProperties["storeFile"]?.let { file(localProperties["storeFile"]!!) }
+            storePassword = localProperties["storePassword"]?.let { localProperties["storePassword"]!! as String }
+            keyAlias = localProperties["keyAlias"]?.let { localProperties["keyAlias"]!! as String}
+            keyPassword = localProperties["keyPassword"]?.let { localProperties["keyPassword"]!! as String}
         }
     }
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
