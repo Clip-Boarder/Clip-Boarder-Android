@@ -145,10 +145,12 @@ fun rememberGoogleSignInSetup(
                 val account = task.getResult(ApiException::class.java)
                 viewModel.signInWithGoogleAccount(account)
             } catch (e: ApiException) {
+                viewModel.endLoginProcess()
                 Toast.makeText(context, "로그인 중 문제가 발생했습니다. 나중에 다시 시도해주세요.: 3", Toast.LENGTH_SHORT)
                     .show()
             }
         } else {
+            viewModel.endLoginProcess()
             Toast.makeText(context, "로그인 중 문제가 발생했습니다. 나중에 다시 시도해주세요.: 4", Toast.LENGTH_SHORT)
                 .show()
         }
