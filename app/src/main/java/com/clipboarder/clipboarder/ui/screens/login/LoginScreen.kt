@@ -192,7 +192,7 @@ fun BrandingSection(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            modifier = Modifier.size(144.dp),
+            modifier = Modifier.size(200.dp),
             painter = painterResource(id = R.drawable.clipboarder_image),
             contentDescription = "클립보더 이미지"
         )
@@ -216,12 +216,17 @@ fun BrandingSection(modifier: Modifier = Modifier) {
 
 @Composable
 fun ActionSection(onGoogleSignInRequested: () -> Unit) {
-    Text("지금 바로 시작해보세요", fontSize = 15.sp, fontWeight = FontWeight.Medium)
+    Text(
+        "지금 바로 시작해보세요",
+        fontSize = 15.sp,
+        fontWeight = FontWeight.Medium,
+        letterSpacing = (-0.025).em
+    )
     Spacer(modifier = Modifier.padding(12.dp))
     Divider(
         color = Color(0xFF5E5E5E),
-        thickness = 2.dp,
-        modifier = Modifier.fillMaxWidth(1.0f)
+        thickness = 1.dp,
+        modifier = Modifier.fillMaxWidth(1.0f),
     )
     Spacer(modifier = Modifier.padding(12.dp))
     Button(
@@ -250,8 +255,9 @@ fun ActionSection(onGoogleSignInRequested: () -> Unit) {
             Text(
                 "구글 계정으로 시작하기",
                 color = Color(0xff767676),
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 15.sp
+                fontWeight = FontWeight.Medium,
+                fontSize = 15.sp,
+                letterSpacing = 0.em
             )
         }
     }
