@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.clipboarder.clipboarder.R
 import com.clipboarder.clipboarder.ui.screens.login.LOGIN_SCREEN
 import com.clipboarder.clipboarder.ui.screens.onboarding.components.OnboardingPage
+import com.clipboarder.clipboarder.ui.styles.TextStyles
 
 /**
  * Route for the onboarding screen.
@@ -137,9 +138,7 @@ fun OnboardingScreen(
                 ) {
                     Text(
                         context.getString(R.string.onboarding_next_page),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        letterSpacing = (-0.025).em,
+                        style = TextStyles.onboardingActionButton
                     )
                 }
             }
