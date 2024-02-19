@@ -1,5 +1,6 @@
 package com.clipboarder.clipboarder.di
 
+import com.clipboarder.clipboarder.BuildConfig
 import com.clipboarder.clipboarder.data.remote.api.ApiService
 import com.clipboarder.clipboarder.data.repository.ContentRepository
 import com.clipboarder.clipboarder.data.repository.UserRepository
@@ -7,10 +8,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
-import com.clipboarder.clipboarder.BuildConfig
 
 /**
  * AppModule
@@ -25,8 +27,18 @@ import com.clipboarder.clipboarder.BuildConfig
 object AppModule {
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit =
-        Retrofit.Builder().baseUrl(BuildConfig.clipboarderBaseUrl).addConverterFactory(GsonConverterFactory.create()).build()
+    fun provideOkHttpClient(): OkHttpClient =
+        OkHttpClient.Builder()
+            .connectTimeout(3, TimeUnit.SECONDS)
+            .readTimeout(3, TimeUnit.SECONDS)
+            .writeTimeout(3, TimeUnit.SECONDS)
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder().baseUrl(BuildConfig.clipboarderBaseUrl).client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create()).build()
 
     @Provides
     @Singleton

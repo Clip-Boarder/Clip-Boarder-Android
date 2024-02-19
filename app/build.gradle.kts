@@ -11,6 +11,13 @@ android {
     namespace = "com.clipboarder.clipboarder"
     compileSdk = 34
 
+    // Get security values from local.properties
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.inputStream())
+    }
+
     defaultConfig {
         applicationId = "com.clipboarder.clipboarder"
         minSdk = 24
@@ -23,20 +30,26 @@ android {
             useSupportLibrary = true
         }
 
-        // Get security values from local.properties
-        val localProperties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            localProperties.load(localPropertiesFile.inputStream())
-        }
-
         localProperties["clipboarderBaseUrl"]?.let {value ->
             buildConfigField("String", "clipboarderBaseUrl", "\"$value\"")
+        }
+        localProperties["clipboarderServerClientId"]?.let { value ->
+            buildConfigField("String", "clipboarderServerClientId", "\"$value\"")
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = localProperties["storeFile"]?.let { file(localProperties["storeFile"]!!) }
+            storePassword = localProperties["storePassword"]?.let { localProperties["storePassword"]!! as String }
+            keyAlias = localProperties["keyAlias"]?.let { localProperties["keyAlias"]!! as String}
+            keyPassword = localProperties["keyPassword"]?.let { localProperties["keyPassword"]!! as String}
         }
     }
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -88,6 +101,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.50")               // Dagger-Hilt
     ksp("com.google.dagger:hilt-android-compiler:2.50")                 // Hilt Compiler
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")       // Hilt Navigation
+    implementation("com.google.android.gms:play-services-auth:21.0.0")  // Google Sign-In
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
