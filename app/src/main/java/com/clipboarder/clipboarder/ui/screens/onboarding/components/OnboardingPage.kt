@@ -47,7 +47,6 @@ fun OnboardingPage(title: String, description: String, imageResourceId: Int, mod
             Text(
                 text = description,
                 style = TextStyles.onboardingDescription,
-                softWrap = true,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }

@@ -5,6 +5,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
@@ -39,6 +40,11 @@ object TextStyles {
         fontWeight = FontWeight.Medium,
         letterSpacing = (-0.03).em,
         textAlign = TextAlign.Center,
+        lineBreak = LineBreak(
+            strategy = LineBreak.Strategy.Balanced,
+            strictness = LineBreak.Strictness.Default,
+            wordBreak = LineBreak.WordBreak.Default
+        )
     )
 
     val onboardingActionButton = TextStyle(
