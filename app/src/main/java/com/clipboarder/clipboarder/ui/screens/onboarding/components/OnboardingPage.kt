@@ -12,13 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
-import androidx.compose.ui.unit.sp
 import com.clipboarder.clipboarder.R
+import com.clipboarder.clipboarder.ui.styles.TextStyles
 
 /**
  * Onboarding page.
@@ -44,19 +41,13 @@ fun OnboardingPage(title: String, description: String, imageResourceId: Int, mod
             Spacer(modifier = Modifier.height(32.dp))
             Text(
                 text = title,
-                fontSize = 32.sp,
-                letterSpacing = (-0.025).em,
-                fontWeight = FontWeight.SemiBold,
+                style = TextStyles.onboardingTitle
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = description,
-                textAlign = TextAlign.Center,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Medium,
-                letterSpacing = (-0.025).em,
-                softWrap = true,
-                modifier = Modifier.padding(horizontal = 48.dp)
+                style = TextStyles.onboardingDescription,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
     }

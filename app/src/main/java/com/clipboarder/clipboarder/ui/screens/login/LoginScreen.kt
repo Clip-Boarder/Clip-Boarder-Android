@@ -36,12 +36,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -49,6 +47,7 @@ import androidx.navigation.compose.rememberNavController
 import com.clipboarder.clipboarder.BuildConfig
 import com.clipboarder.clipboarder.R
 import com.clipboarder.clipboarder.ui.screens.main.MAIN_SCREEN
+import com.clipboarder.clipboarder.ui.styles.TextStyles
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -196,20 +195,18 @@ fun BrandingSection(modifier: Modifier = Modifier) {
             contentDescription = "클립보더 이미지"
         )
         Text(
-            fontWeight = FontWeight.Medium,
-            fontSize = 24.sp,
-            letterSpacing = (-0.025).em,
+            modifier = Modifier.padding(start = 16.dp),
+            style = TextStyles.loginTitleMain,
             text = buildAnnotatedString {
-                withStyle(style = SpanStyle(fontSize = 48.sp)) {
-                    append("더")
+                append("더")
+                withStyle(style = SpanStyle(fontSize = 24.sp)) {
+                    append(" 빠르게, ")
                 }
-                append(" 빠르게, ")
-                withStyle(style = SpanStyle(fontSize = 48.sp)) {
-                    append("더")
+                append("더")
+                withStyle(style = SpanStyle(fontSize = 24.sp)) {
+                    append(" 편리하게")
                 }
-                append(" 편리하게")
-            },
-            modifier = Modifier.padding(start = 8.dp)
+            }
         )
     }
 }
@@ -218,9 +215,7 @@ fun BrandingSection(modifier: Modifier = Modifier) {
 fun ActionSection(onGoogleSignInRequested: () -> Unit) {
     Text(
         "지금 바로 시작해보세요",
-        fontSize = 18.sp,
-        fontWeight = FontWeight.Medium,
-        letterSpacing = (-0.025).em
+        style = TextStyles.loginActionTitle
     )
     Divider(
         color = Color(0xFF5E5E5E),
@@ -254,10 +249,7 @@ fun ActionSection(onGoogleSignInRequested: () -> Unit) {
             )
             Text(
                 "구글 계정으로 시작하기",
-                color = Color(0xff767676),
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp,
-                letterSpacing = 0.em
+                style = TextStyles.loginButton
             )
         }
     }
