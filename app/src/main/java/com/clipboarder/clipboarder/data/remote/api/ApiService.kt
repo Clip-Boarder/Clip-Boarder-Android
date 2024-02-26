@@ -5,11 +5,13 @@ import com.clipboarder.clipboarder.data.remote.dto.ImageDto
 import com.clipboarder.clipboarder.data.remote.dto.SignInDto
 import com.clipboarder.clipboarder.data.remote.dto.TextDto
 import com.clipboarder.clipboarder.data.remote.dto.TextDto.UploadTextResponseDto
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.Part
 
 /**
  * ApiService
@@ -29,8 +31,9 @@ interface ApiService {
     @GET("text")
     suspend fun downloadTextList(): Response<ApiResponseDto<TextDto.DownloadTextListResponseDto>>
 
+    @Multipart
     @POST("image")
-    suspend fun uploadImage(@Body uploadImageRequestDto: ImageDto.UploadImageRequestDto): Response<ApiResponseDto<ImageDto.UploadImageResponseDto>>
+    suspend fun uploadImage(@Part image: MultipartBody.Part): Response<ApiResponseDto<ImageDto.UploadImageResponseDto>>
 
     @GET("image")
     suspend fun downloadImageList(): Response<ApiResponseDto<ImageDto.DownloadImageListResponseDto>>
