@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.clipboarder.clipboarder.data.repository.ContentRepository
 import com.clipboarder.clipboarder.data.repository.UserRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -72,54 +73,55 @@ class ContextMenuActivity : ComponentActivity() {
     }
 
     private fun uploadImage(intent: Intent) {
-        val imageUri = if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
-        } else {
-            intent.getParcelableExtra(Intent.EXTRA_STREAM)
+        fun showToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+        val imageUri = when {
+            VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> intent.getParcelableExtra(
+                Intent.EXTRA_STREAM,
+                Uri::class.java
+            )
+
+            else -> intent.getParcelableExtra(Intent.EXTRA_STREAM)
         }
 
-        imageUri?.let { uri ->
-            val mimeType = contentResolver.getType(uri)
-            val fileExtension = mimeType?.substringAfter("image/") ?: ""
-            try {
-                contentResolver.openInputStream(uri)?.use { inputStream ->
-                    val bytes = inputStream.readBytes()
-                    val requestFile = bytes.toRequestBody(mimeType?.toMediaTypeOrNull())
-                    MultipartBody.Part.createFormData(
-                        "image",
-                        "uploaded_image.$fileExtension",
-                        requestFile
-                    )
-                }?.let { imageData ->
-                    lifecycleScope.launch {
-                        try {
-                            contentRepository.copyImageToClipboarder(imageData).catch { e ->
-                                Toast.makeText(
-                                    this@ContextMenuActivity,
-                                    "Error: ${e.message}",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }.collect { response ->
-                                Toast.makeText(
-                                    this@ContextMenuActivity,
-                                    "이미지 업로드 성공",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        } catch (e: Exception) {
-                            Toast.makeText(
-                                this@ContextMenuActivity,
-                                "Error: ${e.message}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-                } ?: Toast.makeText(this, "이미지 정보를 가져오지 못했습니다!", Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
-                Toast.makeText(this, "이미지 정보를 가져오지 못했습니다!", Toast.LENGTH_SHORT).show()
-                Log.e("[Clipboarder] Upload image error", e.message.toString())
+        imageUri ?: return showToast("이미지 정보를 가져오지 못했습니다!")
+
+        val mimeType = contentResolver.getType(imageUri)
+        val fileExtension = mimeType?.substringAfter("image/") ?: ""
+
+        val imageData = try {
+            contentResolver.openInputStream(imageUri)?.use { inputStream ->
+                val bytes = inputStream.readBytes()
+                val requestFile = bytes.toRequestBody(mimeType?.toMediaTypeOrNull())
+                MultipartBody.Part.createFormData(
+                    "image",
+                    "uploaded_image.$fileExtension",
+                    requestFile
+                )
             }
-        } ?: Toast.makeText(this, "이미지 정보를 가져오지 못했습니다!", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Log.e("[Clipboarder] Upload image error", e.toString())
+            showToast("이미지 정보를 가져오지 못했습니다!")
+            null
+        }
+
+        imageData ?: return
+
+        val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
+            showToast("Error: ${exception.message}")
+        }
+
+        lifecycleScope.launch(coroutineExceptionHandler) {
+            try {
+                contentRepository.copyImageToClipboarder(imageData).catch { e ->
+                    showToast("Error: ${e.message}")
+                }.collect {
+                    showToast("이미지 업로드 성공")
+                }
+            } catch (e: Exception) {
+                showToast("Error: ${e.message}")
+            }
+        }
     }
 
     private fun uploadImages(intent: Intent) {
@@ -138,34 +140,25 @@ class ContextMenuActivity : ComponentActivity() {
     }
 
     private fun uploadText(intent: Intent) {
+        fun showToast(message: String, length: Int = Toast.LENGTH_SHORT) {
+            Toast.makeText(this@ContextMenuActivity, message, length).show()
+        }
+
         intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.let { selectedText ->
             lifecycleScope.launch {
                 contentRepository.copyTextToClipboarder(selectedText.toString())
                     .catch { e ->
-                        Toast.makeText(
-                            this@ContextMenuActivity,
-                            "텍스트 복사 실패",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        showToast("텍스트 복사 실패", Toast.LENGTH_LONG)
                         Log.e("[Clipboarder] Upload text error", e.message.toString())
                     }
                     .collect { response ->
-                        if (response.result!!) {
-                            Toast.makeText(
-                                this@ContextMenuActivity,
-                                "텍스트 복사 성공",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Toast.makeText(
-                                this@ContextMenuActivity,
-                                "텍스트 복사 실패",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
+                        showToast(
+                            if (response.result == true) "텍스트 복사 성공" else "텍스트 복사 실패",
+                            if (response.result == true) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
+                        )
                     }
             }
-        } ?: Toast.makeText(this, "텍스트 정보를 가져오지 못했습니다!", Toast.LENGTH_SHORT).show()
+        } ?: showToast("텍스트 정보를 가져오지 못했습니다!", Toast.LENGTH_SHORT)
     }
 
     private fun uploadTexts(intent: Intent) {
