@@ -31,11 +31,15 @@ class SignInDto {
      * This data class provides the necessary DTO for the sign-in response.
      *
      * @property accessToken The access token of the user.
+     * @property refreshToken The refresh token of the user.
      * @since 1.0.0
      * @author YoungJin Sohn
      */
     data class SignInResponseDto(
         @SerializedName("access_token")
-        val accessToken: String?
+        val accessToken: String?,
+
+        @SerializedName("refresh_token")
+        val refreshToken: String?
     )
 }
