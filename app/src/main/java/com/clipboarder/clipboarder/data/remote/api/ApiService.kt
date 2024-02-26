@@ -20,18 +20,18 @@ import retrofit2.http.Query
  * @author YoungJin Sohn
  */
 interface ApiService {
-    @POST("/login")
+    @POST("login")
     suspend fun signIn(@Body loginRequest: SignInDto.SignInRequestDto): Response<ApiResponseDto<SignInDto.SignInResponseDto>>
 
-    @POST("/text")
+    @POST("text")
     suspend fun uploadText(@Body uploadTextRequest: TextDto.UploadTextRequestDto): Response<ApiResponseDto<UploadTextResponseDto>>
 
-    @GET("/text")
-    suspend fun downloadTextList(@Query("user_id") userId: String): Response<ApiResponseDto<TextDto.DownloadTextListResponseDto>>
+    @GET("text")
+    suspend fun downloadTextList(): Response<ApiResponseDto<TextDto.DownloadTextListResponseDto>>
 
-    @POST("/image")
+    @POST("image")
     suspend fun uploadImage(@Body uploadImageRequestDto: ImageDto.UploadImageRequestDto): Response<ApiResponseDto<ImageDto.UploadImageResponseDto>>
 
-    @GET("/image")
-    suspend fun downloadImageList(@Query("user_id") userId: String): Response<ApiResponseDto<ImageDto.DownloadImageListResponseDto>>
+    @GET("image")
+    suspend fun downloadImageList(): Response<ApiResponseDto<ImageDto.DownloadImageListResponseDto>>
 }
