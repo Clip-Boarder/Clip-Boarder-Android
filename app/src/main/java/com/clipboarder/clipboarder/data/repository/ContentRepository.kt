@@ -6,6 +6,7 @@ import com.clipboarder.clipboarder.data.remote.dto.ImageDto
 import com.clipboarder.clipboarder.data.remote.dto.TextDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 /**
@@ -59,14 +60,13 @@ class ContentRepository @Inject constructor(private val apiService: ApiService) 
      *
      * This function copies the image to the clipboarder.
      *
-     * @param image The content of the image.
+     * @param imageData The image data to upload.
      * @return The response of the image upload.
      */
     fun copyImageToClipboarder(
-        image: String
+        imageData: MultipartBody.Part
     ): Flow<ApiResponseDto<ImageDto.UploadImageResponseDto>> = flow {
-        val uploadImageRequestDto = ImageDto.UploadImageRequestDto(image)
-        val response = apiService.uploadImage(uploadImageRequestDto)
+        val response = apiService.uploadImage(imageData)
         if (response.isSuccessful && response.body() != null) {
             emit(response.body()!!)
         } else {
