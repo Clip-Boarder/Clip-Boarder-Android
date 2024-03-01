@@ -8,8 +8,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ClipboarderKeyboardViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val contentRepository: ContentRepository
 ) : ViewModel() {
 
 }
