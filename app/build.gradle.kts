@@ -30,7 +30,7 @@ android {
             useSupportLibrary = true
         }
 
-        localProperties["clipboarderBaseUrl"]?.let {value ->
+        localProperties["clipboarderBaseUrl"]?.let { value ->
             buildConfigField("String", "clipboarderBaseUrl", "\"$value\"")
         }
         localProperties["clipboarderServerClientId"]?.let { value ->
@@ -41,9 +41,11 @@ android {
     signingConfigs {
         create("release") {
             storeFile = localProperties["storeFile"]?.let { file(localProperties["storeFile"]!!) }
-            storePassword = localProperties["storePassword"]?.let { localProperties["storePassword"]!! as String }
-            keyAlias = localProperties["keyAlias"]?.let { localProperties["keyAlias"]!! as String}
-            keyPassword = localProperties["keyPassword"]?.let { localProperties["keyPassword"]!! as String}
+            storePassword =
+                localProperties["storePassword"]?.let { localProperties["storePassword"]!! as String }
+            keyAlias = localProperties["keyAlias"]?.let { localProperties["keyAlias"]!! as String }
+            keyPassword =
+                localProperties["keyPassword"]?.let { localProperties["keyPassword"]!! as String }
         }
     }
 
@@ -109,6 +111,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.0.0")  // Google Sign-In
     implementation("androidx.security:security-crypto:1.1.0-alpha06")   // Encrypted Shared Preferences
     implementation("com.squareup.okhttp3:okhttp:4.9.0")                 // OkHttp
+    implementation("io.coil-kt:coil-compose:2.6.0")                     // Coil
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
