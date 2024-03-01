@@ -36,9 +36,6 @@ class TextDto {
      * @author YoungJin Sohn
      */
     data class UploadTextRequestDto(
-        @SerializedName("user_id")
-        val userId: String?,
-
         @SerializedName("content")
         val content: String?
     )

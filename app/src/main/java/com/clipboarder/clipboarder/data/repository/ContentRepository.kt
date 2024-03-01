@@ -2,9 +2,11 @@ package com.clipboarder.clipboarder.data.repository
 
 import com.clipboarder.clipboarder.data.remote.api.ApiService
 import com.clipboarder.clipboarder.data.remote.dto.ApiResponseDto
+import com.clipboarder.clipboarder.data.remote.dto.ImageDto
 import com.clipboarder.clipboarder.data.remote.dto.TextDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 /**
@@ -21,15 +23,13 @@ class ContentRepository @Inject constructor(private val apiService: ApiService) 
      *
      * This function copies the text to the clipboarder.
      *
-     * @param userId The user ID of the text uploader.
      * @param text The content of the text.
      * @return The response of the text upload.
      */
     fun copyTextToClipboarder(
-        userId: String,
         text: String
     ): Flow<ApiResponseDto<TextDto.UploadTextResponseDto>> = flow {
-        val uploadTextRequestDto = TextDto.UploadTextRequestDto(userId, text)
+        val uploadTextRequestDto = TextDto.UploadTextRequestDto(text)
         val response = apiService.uploadText(uploadTextRequestDto)
         if (response.isSuccessful && response.body() != null) {
             emit(response.body()!!)
@@ -43,13 +43,11 @@ class ContentRepository @Inject constructor(private val apiService: ApiService) 
      *
      * This function gets the list of texts from the clipboarder.
      *
-     * @param userId The user ID of the text uploader.
      * @return The response of the text list download.
      */
     fun getTextListFromClipboarder(
-        userId: String
     ): Flow<ApiResponseDto<TextDto.DownloadTextListResponseDto>> = flow {
-        val response = apiService.downloadTextList(userId)
+        val response = apiService.downloadTextList()
         if (response.isSuccessful && response.body() != null) {
             emit(response.body()!!)
         } else {
@@ -62,16 +60,13 @@ class ContentRepository @Inject constructor(private val apiService: ApiService) 
      *
      * This function copies the image to the clipboarder.
      *
-     * @param userId The user ID of the image uploader.
-     * @param image The content of the image.
+     * @param imageData The image data to upload.
      * @return The response of the image upload.
      */
     fun copyImageToClipboarder(
-        userId: String,
-        image: String
-    ): Flow<ApiResponseDto<TextDto.UploadTextResponseDto>> = flow {
-        val uploadTextRequestDto = TextDto.UploadTextRequestDto(userId, image)
-        val response = apiService.uploadText(uploadTextRequestDto)
+        imageData: MultipartBody.Part
+    ): Flow<ApiResponseDto<ImageDto.UploadImageResponseDto>> = flow {
+        val response = apiService.uploadImage(imageData)
         if (response.isSuccessful && response.body() != null) {
             emit(response.body()!!)
         } else {
@@ -84,17 +79,15 @@ class ContentRepository @Inject constructor(private val apiService: ApiService) 
      *
      * This function gets the list of images from the clipboarder.
      *
-     * @param userId The user ID of the image uploader.
      * @return The response of the image list download.
      */
-    fun getImageListFromClipboarder(
-        userId: String
-    ): Flow<ApiResponseDto<TextDto.DownloadTextListResponseDto>> = flow {
-        val response = apiService.downloadTextList(userId)
-        if (response.isSuccessful && response.body() != null) {
-            emit(response.body()!!)
-        } else {
-            throw Exception("Image List Download Failed: ${response.message()}")
+    fun getImageListFromClipboarder(): Flow<ApiResponseDto<ImageDto.DownloadImageListResponseDto>> =
+        flow {
+            val response = apiService.downloadImageList()
+            if (response.isSuccessful && response.body() != null) {
+                emit(response.body()!!)
+            } else {
+                throw Exception("Image List Download Failed: ${response.message()}")
+            }
         }
-    }
 }

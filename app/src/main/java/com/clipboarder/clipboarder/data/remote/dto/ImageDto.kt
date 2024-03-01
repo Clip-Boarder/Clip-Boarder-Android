@@ -36,9 +36,6 @@ class ImageDto {
      * @author YoungJin Sohn
      */
     data class UploadImageRequestDto(
-        @SerializedName("user_id")
-        val userId: String?,
-
         @SerializedName("content")
         val content: String?
     )
