@@ -9,5 +9,12 @@ import javax.inject.Inject
 @HiltViewModel
 class ClipboarderKeyboardViewModel @Inject constructor(
 ) : ViewModel() {
+    private lateinit var userRepository: UserRepository
+    private lateinit var contentRepository: ContentRepository
 
+    fun setRepositories(userRepository: UserRepository, contentRepository: ContentRepository) {
+        this.userRepository = userRepository
+        this.contentRepository = contentRepository
+    }
 }
+

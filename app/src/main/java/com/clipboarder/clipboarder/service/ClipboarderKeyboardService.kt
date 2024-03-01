@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ServiceLifecycleDispatcher
@@ -53,11 +52,12 @@ class ClipboarderKeyboardService : InputMethodService(), LifecycleOwner,
 
     @Inject
     lateinit var contentRepository: ContentRepository
+
     private fun onCreateInputComposeView(): AbstractComposeView {
         return object : AbstractComposeView(this) {
             @Composable
             override fun Content() {
-                ClipboarderIME(this@ClipboarderKeyboardService)
+                ClipboarderIME(this@ClipboarderKeyboardService, userRepository, contentRepository)
             }
         }
     }
@@ -116,7 +116,8 @@ class ClipboarderKeyboardService : InputMethodService(), LifecycleOwner,
 @Composable
 fun ClipboarderIME(
     inputMethodService: InputMethodService,
-    viewModel: ClipboarderKeyboardServiceViewModel = hiltViewModel()
+    userRepository: UserRepository,
+    contentRepository: ContentRepository
 ) {
     val pagerState = rememberPagerState(
         pageCount = { 1000 },
@@ -135,7 +136,7 @@ fun ClipboarderIME(
         ) { page ->
             when (page % 2) {
                 0 -> LanguageKeyboard(inputMethodService)
-                1 -> ClipboarderKeyboard(inputMethodService)
+                1 -> ClipboarderKeyboard(inputMethodService, userRepository, contentRepository)
             }
         }
     }
