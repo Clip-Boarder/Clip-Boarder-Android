@@ -2,6 +2,7 @@ package com.clipboarder.clipboarder.data.repository
 
 import com.clipboarder.clipboarder.data.remote.api.ApiService
 import com.clipboarder.clipboarder.data.remote.dto.ApiResponseDto
+import com.clipboarder.clipboarder.data.remote.dto.ContentDto
 import com.clipboarder.clipboarder.data.remote.dto.ImageDto
 import com.clipboarder.clipboarder.data.remote.dto.TextDto
 import kotlinx.coroutines.flow.Flow
@@ -88,6 +89,23 @@ class ContentRepository @Inject constructor(private val apiService: ApiService) 
                 emit(response.body()!!)
             } else {
                 throw Exception("Image List Download Failed: ${response.message()}")
+            }
+        }
+
+    /**
+     * getContentListFromClipboarder
+     *
+     * This function gets the list of contents from the clipboarder.
+     *
+     * @return The response of the content list download.
+     */
+    fun getContentListFromClipboarder(): Flow<ApiResponseDto<ContentDto.DownloadContentListResponseDto>> =
+        flow {
+            val response = apiService.downloadContentList()
+            if (response.isSuccessful && response.body() != null) {
+                emit(response.body()!!)
+            } else {
+                throw Exception("Content List Download Failed: ${response.message()}")
             }
         }
 }
