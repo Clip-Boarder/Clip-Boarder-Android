@@ -76,6 +76,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    viewBinding {
+        enable = true
+    }
 }
 
 dependencies {
@@ -98,7 +101,8 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")             // Retrofit
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")       // Retrofit Converter
-    implementation("com.google.dagger:hilt-android:2.50")               // Dagger-Hilt
+    implementation("com.google.dagger:hilt-android:2.50")
+    implementation("androidx.lifecycle:lifecycle-service:2.7.0")               // Dagger-Hilt
     ksp("com.google.dagger:hilt-android-compiler:2.50")                 // Hilt Compiler
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")       // Hilt Navigation
     implementation("com.google.android.gms:play-services-auth:21.0.0")  // Google Sign-In
