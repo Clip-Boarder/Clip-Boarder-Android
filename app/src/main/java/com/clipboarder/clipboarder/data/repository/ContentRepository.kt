@@ -97,11 +97,12 @@ class ContentRepository @Inject constructor(private val apiService: ApiService) 
      *
      * This function gets the list of contents from the clipboarder.
      *
+     * @param page The page number of the content list.
      * @return The response of the content list download.
      */
-    fun getContentListFromClipboarder(): Flow<ApiResponseDto<ContentDto.DownloadContentListResponseDto>> =
+    fun getContentListFromClipboarder(page: Int): Flow<ApiResponseDto<ContentDto.DownloadContentListResponseDto>> =
         flow {
-            val response = apiService.downloadContentList()
+            val response = apiService.downloadContentList(page)
             if (response.isSuccessful && response.body() != null) {
                 emit(response.body()!!)
             } else {

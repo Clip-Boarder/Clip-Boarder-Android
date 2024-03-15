@@ -13,6 +13,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 
 /**
  * ApiService
@@ -40,5 +41,5 @@ interface ApiService {
     suspend fun downloadImageList(): Response<ApiResponseDto<ImageDto.DownloadImageListResponseDto>>
 
     @GET("api/content")
-    suspend fun downloadContentList(): Response<ApiResponseDto<ContentDto.DownloadContentListResponseDto>>
+    suspend fun downloadContentList(@Query("page") page: Int): Response<ApiResponseDto<ContentDto.DownloadContentListResponseDto>>
 }
