@@ -26,6 +26,9 @@ class ClipboarderKeyboardViewModel @Inject constructor(
     private lateinit var userRepository: UserRepository
     private lateinit var contentRepository: ContentRepository
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
+
     private val _contentList = MutableStateFlow<List<ContentDto.ContentObjectDto>>(emptyList())
     val contentList: StateFlow<List<ContentDto.ContentObjectDto>> = _contentList
 
@@ -47,12 +50,19 @@ class ClipboarderKeyboardViewModel @Inject constructor(
      *
      * Load content list from clipboarder.
      */
-    fun loadContentList() {
+    fun loadContentList(page: Int) {
+        if (page == 0) {
+            _isRefreshing.value = true
+        }
         viewModelScope.launch {
             try {
-                contentRepository.getContentListFromClipboarder().collect { responseDto ->
+                contentRepository.getContentListFromClipboarder(page).collect { responseDto ->
                     if (responseDto.result!!) {
-                        _contentList.value = responseDto.data?.contentList!!
+                        if (page == 0) {
+                            _contentList.value = responseDto.data?.contentList!!
+                        } else {
+                            _contentList.value += responseDto.data?.contentList!!
+                        }
                     } else {
                         throw Exception("Error: error while getting content list")
                     }
@@ -60,6 +70,10 @@ class ClipboarderKeyboardViewModel @Inject constructor(
             } catch (e: Exception) {
                 _contentList.value = emptyList()
                 Log.e("ClipboarderKeyboardViewModel", "Error: error while getting content list", e)
+            } finally {
+                if (page == 0) {
+                    _isRefreshing.value = false
+                }
             }
         }
     }

@@ -12,13 +12,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,6 +44,7 @@ import com.clipboarder.clipboarder.data.repository.UserRepository
  * @param userRepository user repository
  * @param contentRepository content repository
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClipboarderKeyboard(
     inputMethodService: InputMethodService,
@@ -46,18 +53,41 @@ fun ClipboarderKeyboard(
     viewModel: ClipboarderKeyboardViewModel = hiltViewModel()
 ) {
     viewModel.setRepositories(userRepository, contentRepository)
-    viewModel.loadContentList()
+    viewModel.loadContentList(0)
 
     val contentList by viewModel.contentList.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        contentPadding = PaddingValues(4.dp),
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(contentList.size) { index ->
-            ClipboarderContentItem(inputMethodService = inputMethodService, contentItem = contentList[index])
+    val state = rememberPullToRefreshState()
+
+    if (state.isRefreshing) {
+        viewModel.loadContentList(0)
+    }
+
+    LaunchedEffect(isRefreshing) {
+        if (!isRefreshing) {
+            state.endRefresh()
         }
+    }
+
+    Box(
+        Modifier.nestedScroll(state.nestedScrollConnection)
+    ) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            contentPadding = PaddingValues(4.dp),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(contentList.size) { index ->
+                ClipboarderContentItem(
+                    inputMethodService = inputMethodService,
+                    contentItem = contentList[index]
+                )
+            }
+        }
+        PullToRefreshContainer(
+            modifier = Modifier.align(Alignment.TopCenter), state = state
+        )
     }
 }
 
@@ -70,12 +100,15 @@ fun ClipboarderKeyboard(
  * @param contentItem content item
  */
 @Composable
-fun ClipboarderContentItem(inputMethodService: InputMethodService, contentItem: ContentDto.ContentObjectDto) {
+fun ClipboarderContentItem(
+    inputMethodService: InputMethodService,
+    contentItem: ContentDto.ContentObjectDto
+) {
     Box(
         modifier = Modifier
             .padding(4.dp)
             .aspectRatio(1f)
-            .clip(RoundedCornerShape(4.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(Color.LightGray)
             .clickable {
                 when (contentItem.contentType) {
