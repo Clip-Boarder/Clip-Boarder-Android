@@ -5,13 +5,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
@@ -20,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,41 +58,79 @@ fun ClipboarderKeyboard(
     viewModel: ClipboarderKeyboardViewModel = hiltViewModel()
 ) {
     viewModel.setRepositories(userRepository, contentRepository)
-    viewModel.loadContentList(0)
 
     val contentList by viewModel.contentList.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val isLoadingNextPage by viewModel.isLoadingNextPage.collectAsState()
 
-    val state = rememberPullToRefreshState()
+    val pullToRefreshState = rememberPullToRefreshState()
+    val lazyGridState = rememberLazyGridState()
+    var lastLoadedItemIndex = 0
 
-    if (state.isRefreshing) {
-        viewModel.loadContentList(0)
+    // Load first page
+    LaunchedEffect(Unit) {
+        viewModel.loadFirstPage()
     }
 
-    LaunchedEffect(isRefreshing) {
-        if (!isRefreshing) {
-            state.endRefresh()
+    // Load content list when refreshing
+    LaunchedEffect(pullToRefreshState.isRefreshing) {
+        if (pullToRefreshState.isRefreshing) {
+            pullToRefreshState.endRefresh()
+            viewModel.loadFirstPage()
         }
+    }
+
+    // Load next page when the last item is visible
+    LaunchedEffect(lazyGridState) {
+        snapshotFlow { lazyGridState.layoutInfo.visibleItemsInfo }
+            .collect { visibleItems ->
+                val lastVisibleItemIndex = visibleItems.lastOrNull()?.index ?: 0
+                if (lastLoadedItemIndex != lastVisibleItemIndex && lastVisibleItemIndex >= contentList.size - 1) {
+                    viewModel.loadNextPage()
+                    lastLoadedItemIndex = lastVisibleItemIndex
+                }
+            }
     }
 
     Box(
-        Modifier.nestedScroll(state.nestedScrollConnection)
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(pullToRefreshState.nestedScrollConnection)
     ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            contentPadding = PaddingValues(4.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(contentList.size) { index ->
-                ClipboarderContentItem(
-                    inputMethodService = inputMethodService,
-                    contentItem = contentList[index]
-                )
+        if (isRefreshing) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(48.dp)
+                    .align(Alignment.Center)
+            )
+        } else {
+            Column {
+                LazyVerticalGrid(
+                    state = lazyGridState,
+                    columns = GridCells.Fixed(3),
+                    contentPadding = PaddingValues(4.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    items(contentList.size) { index ->
+                        ClipboarderContentItem(
+                            inputMethodService = inputMethodService,
+                            contentItem = contentList[index]
+                        )
+                    }
+                }
+                if (isLoadingNextPage) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                }
             }
+
+            PullToRefreshContainer(
+                modifier = Modifier.align(Alignment.TopCenter), state = pullToRefreshState
+            )
         }
-        PullToRefreshContainer(
-            modifier = Modifier.align(Alignment.TopCenter), state = state
-        )
     }
 }
 

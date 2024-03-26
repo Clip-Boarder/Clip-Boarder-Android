@@ -29,8 +29,14 @@ class ClipboarderKeyboardViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
+    private val _isLoadingNextPage = MutableStateFlow(false)
+    val isLoadingNextPage: StateFlow<Boolean> = _isLoadingNextPage
+
     private val _contentList = MutableStateFlow<List<ContentDto.ContentObjectDto>>(emptyList())
     val contentList: StateFlow<List<ContentDto.ContentObjectDto>> = _contentList
+
+    private var currentPage = 0
+    private var loadingPage = 0
 
     /**
      * Set repositories.
@@ -50,31 +56,67 @@ class ClipboarderKeyboardViewModel @Inject constructor(
      *
      * Load content list from clipboarder.
      */
-    fun loadContentList(page: Int) {
-        if (page == 0) {
-            _isRefreshing.value = true
-        }
-        viewModelScope.launch {
-            try {
-                contentRepository.getContentListFromClipboarder(page).collect { responseDto ->
-                    if (responseDto.result!!) {
-                        if (page == 0) {
-                            _contentList.value = responseDto.data?.contentList!!
-                        } else {
-                            _contentList.value += responseDto.data?.contentList!!
-                        }
+    suspend fun loadContentList() {
+        Log.d("ClipboarderKeyboardViewModel", "Load content list by page: $loadingPage")
+
+        try {
+            contentRepository.getContentListFromClipboarder(loadingPage).collect { responseDto ->
+                if (!responseDto.result!!) {
+                    throw Exception("Error: error while getting content list")
+                } else {
+                    if (responseDto.data?.contentList!!.isNotEmpty()) {
+                        _contentList.value += responseDto.data.contentList
+                        currentPage = loadingPage
                     } else {
-                        throw Exception("Error: error while getting content list")
+                        loadingPage = currentPage
                     }
                 }
-            } catch (e: Exception) {
-                _contentList.value = emptyList()
-                Log.e("ClipboarderKeyboardViewModel", "Error: error while getting content list", e)
-            } finally {
-                if (page == 0) {
-                    _isRefreshing.value = false
-                }
             }
+        } catch (e: Exception) {
+            loadingPage = currentPage
+            Log.e("ClipboarderKeyboardViewModel", "Error: error while getting content list", e)
+        }
+    }
+
+    /**
+     * Load first page.
+     *
+     * Load first page of the content list.
+     */
+    fun loadFirstPage() {
+        if (isRefreshing.value || isLoadingNextPage.value) {
+            Log.d("ClipboarderKeyboardViewModel", "Load first page canceled")
+            return
+        }
+
+        Log.d("ClipboarderKeyboardViewModel", "Load first page")
+
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            loadingPage = 1
+            loadContentList()
+            _isRefreshing.value = false
+        }
+    }
+
+    /**
+     * Load next page.
+     *
+     * Load next page of the content list.
+     */
+    fun loadNextPage() {
+        if (isRefreshing.value || isLoadingNextPage.value) {
+            Log.d("ClipboarderKeyboardViewModel", "Load next page canceled")
+            return
+        }
+
+        Log.d("ClipboarderKeyboardViewModel", "Load next page")
+
+        viewModelScope.launch {
+            _isLoadingNextPage.value = true
+            loadingPage++
+            loadContentList()
+            _isLoadingNextPage.value = false
         }
     }
 }
