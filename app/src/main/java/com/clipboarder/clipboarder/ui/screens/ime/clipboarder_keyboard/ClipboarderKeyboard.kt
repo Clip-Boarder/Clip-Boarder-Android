@@ -5,13 +5,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -104,26 +105,29 @@ fun ClipboarderKeyboard(
                     .align(Alignment.Center)
             )
         } else {
-            Column {
-                LazyVerticalGrid(
-                    state = lazyGridState,
-                    columns = GridCells.Fixed(3),
-                    contentPadding = PaddingValues(4.dp),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    items(contentList.size) { index ->
-                        ClipboarderContentItem(
-                            inputMethodService = inputMethodService,
-                            contentItem = contentList[index]
-                        )
-                    }
+            LazyVerticalGrid(
+                state = lazyGridState,
+                columns = GridCells.Fixed(3),
+                contentPadding = PaddingValues(4.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(contentList.size) { index ->
+                    ClipboarderContentItem(
+                        inputMethodService = inputMethodService,
+                        contentItem = contentList[index]
+                    )
                 }
                 if (isLoadingNextPage) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .align(Alignment.CenterHorizontally)
-                    )
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
                 }
             }
 
