@@ -121,5 +121,16 @@ class ClipboarderKeyboardViewModel @Inject constructor(
             _isLoadingNextPage.value = false
         }
     }
+
+    /**
+     * Clear content list.
+     *
+     * Clear content list and reset page index.
+     */
+    fun clearContentList() {
+        _contentList.value = emptyList()
+        currentPage = 0
+        loadingPage = 0
+    }
 }
 

@@ -56,6 +56,7 @@ fun ClipboarderKeyboard(
     inputMethodService: InputMethodService,
     userRepository: UserRepository,
     contentRepository: ContentRepository,
+    isCurrentPage: Boolean,
     viewModel: ClipboarderKeyboardViewModel = hiltViewModel()
 ) {
     viewModel.setRepositories(userRepository, contentRepository)
@@ -68,29 +69,33 @@ fun ClipboarderKeyboard(
     val lazyGridState = rememberLazyGridState()
     var lastLoadedItemIndex = 0
 
-    // Load first page
-    LaunchedEffect(Unit) {
-        viewModel.loadFirstPage()
-    }
+    if (isCurrentPage) {
 
-    // Load content list when refreshing
-    LaunchedEffect(pullToRefreshState.isRefreshing) {
-        if (pullToRefreshState.isRefreshing) {
-            pullToRefreshState.endRefresh()
+        // Load first page
+        LaunchedEffect(Unit) {
             viewModel.loadFirstPage()
         }
-    }
 
-    // Load next page when the last item is visible
-    LaunchedEffect(lazyGridState) {
-        snapshotFlow { lazyGridState.layoutInfo.visibleItemsInfo }
-            .collect { visibleItems ->
-                val lastVisibleItemIndex = visibleItems.lastOrNull()?.index ?: 0
-                if (lastLoadedItemIndex != lastVisibleItemIndex && lastVisibleItemIndex >= contentList.size - 1) {
-                    viewModel.loadNextPage()
-                    lastLoadedItemIndex = lastVisibleItemIndex
-                }
+        // Load content list when refreshing
+        LaunchedEffect(pullToRefreshState.isRefreshing) {
+            if (pullToRefreshState.isRefreshing) {
+                pullToRefreshState.endRefresh()
+                viewModel.loadFirstPage()
             }
+        }
+
+        // Load next page when the last item is visible
+        LaunchedEffect(lazyGridState) {
+            snapshotFlow { lazyGridState.layoutInfo.visibleItemsInfo }
+                .collect { visibleItems ->
+                    val lastVisibleItemIndex = visibleItems.lastOrNull()?.index ?: 0
+                    if (lastLoadedItemIndex != lastVisibleItemIndex && lastVisibleItemIndex >= contentList.size - 1) {
+                        viewModel.loadNextPage()
+                        lastLoadedItemIndex = lastVisibleItemIndex
+                    }
+                }
+        }
+
     }
 
     Box(
