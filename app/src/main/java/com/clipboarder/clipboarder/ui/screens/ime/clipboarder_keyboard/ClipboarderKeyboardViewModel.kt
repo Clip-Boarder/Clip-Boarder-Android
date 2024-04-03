@@ -91,6 +91,8 @@ class ClipboarderKeyboardViewModel @Inject constructor(
 
         Log.d("ClipboarderKeyboardViewModel", "Load first page")
 
+        _contentList.value = emptyList()
+
         viewModelScope.launch {
             _isRefreshing.value = true
             loadingPage = 1
