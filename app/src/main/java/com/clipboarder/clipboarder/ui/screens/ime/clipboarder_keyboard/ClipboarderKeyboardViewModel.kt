@@ -32,6 +32,9 @@ class ClipboarderKeyboardViewModel @Inject constructor(
     private val _isLoadingNextPage = MutableStateFlow(false)
     val isLoadingNextPage: StateFlow<Boolean> = _isLoadingNextPage
 
+    private val _isLastPage = MutableStateFlow(false)
+    val isLastPage: StateFlow<Boolean> = _isLastPage
+
     private val _contentList = MutableStateFlow<List<ContentDto.ContentObjectDto>>(emptyList())
     val contentList: StateFlow<List<ContentDto.ContentObjectDto>> = _contentList
 
@@ -69,6 +72,7 @@ class ClipboarderKeyboardViewModel @Inject constructor(
                         currentPage = loadingPage
                     } else {
                         loadingPage = currentPage
+                        _isLastPage.value = true
                     }
                 }
             }
@@ -92,10 +96,11 @@ class ClipboarderKeyboardViewModel @Inject constructor(
         Log.d("ClipboarderKeyboardViewModel", "Load first page")
 
         _contentList.value = emptyList()
+        _isRefreshing.value = true
+        _isLastPage.value = false
+        loadingPage = 1
 
         viewModelScope.launch {
-            _isRefreshing.value = true
-            loadingPage = 1
             loadContentList()
             _isRefreshing.value = false
         }
@@ -112,10 +117,10 @@ class ClipboarderKeyboardViewModel @Inject constructor(
             return
         }
 
+        _isLoadingNextPage.value = true
         Log.d("ClipboarderKeyboardViewModel", "Load next page")
 
         viewModelScope.launch {
-            _isLoadingNextPage.value = true
             loadingPage++
             loadContentList()
             _isLoadingNextPage.value = false
@@ -128,6 +133,7 @@ class ClipboarderKeyboardViewModel @Inject constructor(
      * Clear content list and reset page index.
      */
     fun clearContentList() {
+        _isLastPage.value = false
         _contentList.value = emptyList()
         currentPage = 0
         loadingPage = 0

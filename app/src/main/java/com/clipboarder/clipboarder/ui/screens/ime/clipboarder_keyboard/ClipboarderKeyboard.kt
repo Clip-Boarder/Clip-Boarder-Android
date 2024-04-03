@@ -1,6 +1,7 @@
 package com.clipboarder.clipboarder.ui.screens.ime.clipboarder_keyboard
 
 import android.inputmethodservice.InputMethodService
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -64,10 +65,10 @@ fun ClipboarderKeyboard(
     val contentList by viewModel.contentList.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val isLoadingNextPage by viewModel.isLoadingNextPage.collectAsState()
+    val isLastPage by viewModel.isLastPage.collectAsState()
 
     val pullToRefreshState = rememberPullToRefreshState()
     val lazyGridState = rememberLazyGridState()
-    var lastLoadedItemIndex = 0
 
     if (isCurrentPage) {
 
@@ -89,13 +90,13 @@ fun ClipboarderKeyboard(
             snapshotFlow { lazyGridState.layoutInfo.visibleItemsInfo }
                 .collect { visibleItems ->
                     val lastVisibleItemIndex = visibleItems.lastOrNull()?.index ?: 0
-                    if (lastLoadedItemIndex != lastVisibleItemIndex && lastVisibleItemIndex >= contentList.size - 1) {
+                    val lastItemIndex = contentList.size - 1
+
+                    if (!isLoadingNextPage && !isLastPage && lastVisibleItemIndex >= lastItemIndex) {
                         viewModel.loadNextPage()
-                        lastLoadedItemIndex = lastVisibleItemIndex
                     }
                 }
         }
-
     }
 
     Box(
