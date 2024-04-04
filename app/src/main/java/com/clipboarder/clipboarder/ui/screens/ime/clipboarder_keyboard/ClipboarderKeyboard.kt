@@ -41,6 +41,7 @@ import com.clipboarder.clipboarder.BuildConfig
 import com.clipboarder.clipboarder.data.remote.dto.ContentDto
 import com.clipboarder.clipboarder.data.repository.ContentRepository
 import com.clipboarder.clipboarder.data.repository.UserRepository
+import com.clipboarder.clipboarder.ui.composable.others.ClipboarderContentStyledText
 
 /**
  * Clipboarder keyboard.
@@ -185,12 +186,7 @@ fun ClipboarderContentItem(
             }
     ) {
         when (contentItem.contentType) {
-            "text" -> Text(
-                text = contentItem.content ?: "",
-                modifier = Modifier.padding(8.dp),
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis
-            )
+            "text" -> ClipboarderContentStyledText(content = contentItem.content!!)
 
             "image" -> Image(
                 painter = rememberAsyncImagePainter(BuildConfig.clipboarderBaseUrl + contentItem.content),
