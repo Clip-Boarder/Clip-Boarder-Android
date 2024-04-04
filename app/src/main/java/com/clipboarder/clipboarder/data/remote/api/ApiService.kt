@@ -1,6 +1,7 @@
 package com.clipboarder.clipboarder.data.remote.api
 
 import com.clipboarder.clipboarder.data.remote.dto.ApiResponseDto
+import com.clipboarder.clipboarder.data.remote.dto.ContentDto
 import com.clipboarder.clipboarder.data.remote.dto.ImageDto
 import com.clipboarder.clipboarder.data.remote.dto.SignInDto
 import com.clipboarder.clipboarder.data.remote.dto.TextDto
@@ -12,6 +13,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 
 /**
  * ApiService
@@ -22,19 +24,22 @@ import retrofit2.http.Part
  * @author YoungJin Sohn
  */
 interface ApiService {
-    @POST("login")
+    @POST("api/login")
     suspend fun signIn(@Body loginRequest: SignInDto.SignInRequestDto): Response<ApiResponseDto<SignInDto.SignInResponseDto>>
 
-    @POST("text")
+    @POST("api/text")
     suspend fun uploadText(@Body uploadTextRequest: TextDto.UploadTextRequestDto): Response<ApiResponseDto<UploadTextResponseDto>>
 
-    @GET("text")
+    @GET("api/text")
     suspend fun downloadTextList(): Response<ApiResponseDto<TextDto.DownloadTextListResponseDto>>
 
     @Multipart
-    @POST("image")
+    @POST("api/image")
     suspend fun uploadImage(@Part image: MultipartBody.Part): Response<ApiResponseDto<ImageDto.UploadImageResponseDto>>
 
-    @GET("image")
+    @GET("api/image")
     suspend fun downloadImageList(): Response<ApiResponseDto<ImageDto.DownloadImageListResponseDto>>
+
+    @GET("api/content")
+    suspend fun downloadContentList(@Query("page") page: Int): Response<ApiResponseDto<ContentDto.DownloadContentListResponseDto>>
 }

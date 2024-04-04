@@ -47,7 +47,7 @@ class LoginScreenViewModel @Inject constructor(private val userRepository: UserR
                     if (responseDto.result!!) {
                         userRepository.saveLoginInfo(
                             accessToken = responseDto.data?.accessToken!!,
-                            refreshToken = responseDto.data.accessToken,
+                            refreshToken = responseDto.data.refreshToken!!,
                             email = account.email!!)
                         Log.d("LoginScreenViewModel", "Token: ${responseDto.data.accessToken}")
                         _isLoginSuccess.value = true
@@ -59,6 +59,7 @@ class LoginScreenViewModel @Inject constructor(private val userRepository: UserR
             } catch (e: Exception) {
                 _isLoginSuccess.value = false
                 Log.d("LoginScreenViewModel", "Error in googleSignIn: $e")
+                e.printStackTrace()
             } finally {
                 endLoginProcess()
             }
